@@ -28,7 +28,7 @@ void uart_tb::send_data_apb(int data_s, int adr, int size, tlm::tlm_command cmd)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+
 }
 
 void uart_tb::send_data_tx(int data_s, int size)
@@ -51,7 +51,7 @@ void uart_tb::send_data_tx(int data_s, int size)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+
 }
 
 void uart_tb::send_data_pmc(int data_s, int size)
@@ -74,7 +74,7 @@ void uart_tb::send_data_pmc(int data_s, int size)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+
 }
 
   void uart_tb::receive_data_rx( tlm::tlm_generic_payload& trans, sc_time& delay )
@@ -118,28 +118,31 @@ void uart_tb::send_data_pmc(int data_s, int size)
 }
 
 void uart_tb::init(){
-
+  printf("***** INIT uart *****\n\n");
+  printf("disable uart\n");
   send_data_pmc(0,1);
 
+  printf("\nset reg cr\n");
   send_data_apb(0x12, 0x00, 4, APB_WRITE);
-  //activer UART
+  printf("\nenable uart\n");
   send_data_pmc(1,1);
-
+  printf("\nset reg cr\n");
   send_data_apb(0x40, 0x00, 4, APB_WRITE);
 }
 
 void uart_tb::exec_test(){
-
+  printf("***** EXEC_TEST uart *****\n\n");
+  printf("\nset reg thr\n");
   //Envoie
   send_data_apb(0xAA, 0x1C, 4, APB_WRITE);
-
+  printf("\nset reg cr\n");
 //initialiser RX
   send_data_apb(0x50, 0x00, 4, APB_WRITE);
 
-  printf("Envoie d une donnee : 24\n");
+  printf("\nEnvoie d une donnee : 24\n");
   send_data_tx(24, 4);
   //test IRQ de l uart levé
-
+  printf("\nread reg sr\n");
   send_data_apb(0x00, 0x14, 4, APB_READ);
   //Test de RX_READY
   if(ret_val & 0x01 )
@@ -147,6 +150,7 @@ void uart_tb::exec_test(){
   else
     printf("RX_READY NOk \n");
 
+  printf("\nread reg rhr\n");
 //Verification des donneess lues
  send_data_apb(0x00, 0x18, 4, APB_READ);
  if(ret_val == 24)

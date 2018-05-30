@@ -2,6 +2,8 @@
 #include "../include/uart_tb.h"
 #include <iostream>
 #include "systemc.h"
+#include "tlm.h"
+
 #define BASE_ADR_UART0 0
 #define BASE_ADR_UART1 1
 #define BASE_ADR_UART2 2
@@ -21,6 +23,9 @@ uart0.apb_tx.bind( uart_tb0.from_uart_apb_rx );
 uart0.irq_tx.bind( uart_tb0.from_uart_irq_rx);
 
 sc_start();
+
+uart_tb0.init();
+uart_tb0.exec_test();
 
 return 0;
 

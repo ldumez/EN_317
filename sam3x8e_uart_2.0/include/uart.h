@@ -23,7 +23,7 @@ using namespace std;
 
 SC_MODULE(uart)            // declare add sc_module
 {
-
+public:
   SC_CTOR(uart) : reg_uart_cr(class_reg_uart_cr()),
   reg_uart_mr(class_reg_uart_mr()),
   reg_uart_ier(class_reg_uart_ier()),
@@ -38,7 +38,6 @@ SC_MODULE(uart)            // declare add sc_module
     apb_rx.register_b_transport(this, &uart::receive_data_apb);
     pmc_rx.register_b_transport(this, &uart::receive_data_pmc);
   }
-
   void  write (int data, int offset);
   int   read  (int offset);
   int   reset ();

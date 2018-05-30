@@ -59,46 +59,48 @@ int uart::read(int offset){
 
   switch(offset) {
 	case 0x0000 : // Control Register
-		data = reg_uart_cr.read();
+		send_data_apb(reg_uart_cr.read(),4);
 		break;
 
 	case 0x0004 : // Mode Register
-		data = reg_uart_mr.read();
+		send_data_apb(reg_uart_mr.read(),4);
 		break;
 
 	case 0x0008 : // Interrupt Enable Register
-		data = reg_uart_ier.read();
+		send_data_apb(reg_uart_ier.read(),4);
 		break;
 
 	case 0x000C : // Interrupt Disable Register
-		data = reg_uart_idr.read();
+		send_data_apb(reg_uart_idr.read(),4);
 		break;
 
 	case 0x0010 : // Interrupt mask register
-		data = reg_uart_imr.read();
+		send_data_apb(reg_uart_imr.read(),4);
 		break;
 
 	case 0x0014 : //Status register
-		data = reg_uart_sr.read();
+		send_data_apb(reg_uart_sr.read(),4);
 		break;
 
 	case 0x0018 : // Receive Holding Register
 		if ( reg_uart_sr.rxrdy == 1 )
 		{
-			data = reg_uart_rhr.read(); // read off RHR
+			send_data_apb(reg_uart_rhr.read(),4); // read off RHR
 			reg_uart_sr.rxrdy = 0; // RXRDY set to 0 once RHR red
 		}
 		break;
 
 	case 0x0020 : // Baud Rate Generator Register
-		data = reg_uart_brgr.read();
+		send_data_apb(reg_uart_brgr.read(), 4);
 		break;
 
  default : // Not Applicable => Write-only registers
 		// 0x001C : Transmit Holding Register
+    printf("\nerror default addr\n");
 		break;
 }
-return data;
+//printf("\nread data : %d\n", data);
+//send_data_apb(data, 1) ;
 }
 
 void uart::send_data_tx(int data_s, int size)
@@ -121,7 +123,7 @@ void uart::send_data_tx(int data_s, int size)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+    //wait(delay);
 }
 
 void uart::send_data_irq(int data_s, int size)
@@ -144,7 +146,7 @@ void uart::send_data_irq(int data_s, int size)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+    //wait(delay);
 }
 
 void uart::send_data_apb(int data_s, int size)
@@ -167,7 +169,7 @@ void uart::send_data_apb(int data_s, int size)
     cout << "trans : " << " data = " << data_s << endl;
 
     // Realize the delay annotated onto the transport call
-    wait(delay);
+    //wait(delay);
 }
 
   void uart::receive_data_rx( tlm::tlm_generic_payload& trans, sc_time& delay )
