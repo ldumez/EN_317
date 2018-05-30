@@ -180,7 +180,7 @@ void uart::send_data_apb(int data_s, int size)
     SC_REPORT_ERROR("TLM-2", "Target does not support given generic payload transaction");
 
   reg_uart_rhr.set_reg_value(*ptr);
-
+  reg_uart_sr.rxrdy = 1;
   send_data_irq(1, 1);
 
   // Obliged to set response status to indicate successful completion
